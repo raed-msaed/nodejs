@@ -19,12 +19,12 @@ app.post('/add', (req, res) => {
     usr.save()
         .then(
             (savedUser) => {
-                res.send(savedUser) //response BD partie frontend after save
+                res.status(200).send(savedUser) //response BD partie frontend after save
             }
         )
         .catch(
             (err) => {
-                res.send(err)
+                res.status(400).send(err)
             }
         )
 })
@@ -120,10 +120,10 @@ app.put('/up/:id', async(req, res)=>{
         id=req.params.id
         newdata = req.body
         upUserDate=await User.findByIdAndUpdate({_id:id}, newdata)
-        res.send(upUserDate)
+        res.status(200).send(upUserDate)
     }
     catch(error){
-        res.send(error)
+        res.status(400).send(error)
     }
 })
 
