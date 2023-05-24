@@ -29,16 +29,128 @@ app.post('/add', (req, res) => {
         )
 })
 
-app.get('/getall', () => {
-    console.log("get All work");
+
+app.post('/create', async (req, res)=>{
+    try{
+        data = req.body;
+
+        Userdata = new User(data);
+
+        savedUser = await Userdata.save();
+
+        res.send(savedUser);
+
+    } catch(error){
+
+        res.send(error)
+
+    }
 })
 
-app.put('/update', () => {
-    console.log("update work");
+
+app.get('/getall', (req, res) => {
+    User.find()
+        .then(
+            (users)=>{
+                res.send(users);
+            }
+        )
+        .catch(
+            (err)=>{
+                res.send(err)
+            }
+        )
+
 })
 
-app.delete('/delete', () => {
-    console.log("delete work");
+app.get('/all' , async (req, res)=>{
+    try{
+        users = await User.find({ age:23});
+        res.send(users);
+    }catch(error){
+        res.send(error)
+    }
+})
+
+app.get('/getbyid/:id' , (req, res)=>{
+    myid= req.params.id;
+    User.findOne({ _id:myid})
+        .then(
+            (user)=>{
+                res.send(user)
+            }
+        )
+        .catch(
+            (err)=>{
+                res.send(err)
+            }
+        )
+})
+
+app.get('/byid/:id', async (req, res)=>{
+    try{
+        myid= req.params.id;
+        data = await User.findById({_id:myid})
+        res.send(data);
+    }
+    catch(error){
+        res.send(error)
+    }
+})
+
+
+app.put('/update/:id', (req, res) => {
+    id = req.params.id
+    newData=req.body;
+    User.findByIdAndUpdate({_id:id}, newData )
+        .then(
+            (updated)=>{
+                res.send(updated)
+            }
+        )
+        .catch(
+            (err)=>{
+                res.send(err)
+            }
+        )
+})
+
+app.put('/up/:id', async(req, res)=>{
+    try{
+        id=req.params.id
+        newdata = req.body
+        upUserDate=await User.findByIdAndUpdate({_id:id}, newdata)
+        res.send(upUserDate)
+    }
+    catch(error){
+        res.send(error)
+    }
+})
+
+
+app.delete('/delete/:id', (req, res) => {
+    id=req.params.id
+    User.findOneAndDelete({_id:id})
+        .then(
+            (deletedUser)=>{
+                res.send(deletedUser)
+            }
+        )
+        .catch(
+            (err)=>{
+                res.send(err)
+            }
+        )
+})
+
+app.delete('/del/:id', async (req, res)=>{
+    try{
+        id=req.params.id
+        deletedUser= await User.findByIdAndDelete({_id:id});
+        res.send(deletedUser)
+    }catch(error){
+        res.send(error)
+    }
 })
 
 app.listen(3000, () => {
